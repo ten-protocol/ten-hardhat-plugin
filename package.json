@@ -1,9 +1,9 @@
 {
-  "name": "hardhat-ts-plugin-boilerplate",
+  "name": "hh-obscuro-plugin",
   "version": "0.0.1",
-  "description": "Hardhat TypeScript plugin boilerplate",
-  "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",
-  "author": "Nomic Labs LLC",
+  "description": "Obscuro Labs",
+  "repository": "github:obscurolabs/hh-obscuro-plugin",
+  "author": "Obscuro Labs",
   "license": "MIT",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

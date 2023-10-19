@@ -1,6 +1,6 @@
-import { extendConfig, extendEnvironment, subtask } from "hardhat/config";
+import { extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { HardhatConfig, HardhatUserConfig, HttpNetworkConfig, NetworkConfig } from "hardhat/types";
+import { HttpNetworkConfig, HttpNetworkUserConfig, NetworkConfig } from "hardhat/types";
 import { task } from "hardhat/config";
 import "@nomicfoundation/hardhat-ethers";
 
@@ -16,9 +16,15 @@ extendEnvironment((hre) => {
     return;
   }
 
-  if (httpConfig.useGateway !== true) {
+  if (httpConfig.useGateway != null && httpConfig.useGateway !== true) {
     return;
   }
+
+  if (!httpConfig.url.includes("obscu.ro")) {
+    return;
+  }
+
+  console.log("Obscuro URL detected! Initializing plugin.");
 
   // We add a field to the Hardhat Runtime Environment here.
   // We use lazyObject to avoid initializing things until they are actually
@@ -45,9 +51,29 @@ extendEnvironment((hre) => {
       return;
     }
 
-    task(key).setAction(async (args, env, runSuper)=>{
+    task(key)
+    .setDescription(hre.tasks[key]?.description || "")
+    .setAction(async (args, env, runSuper)=>{
       await initializeGateway;
       return await runSuper(args);
     });
   });
 });
+
+
+export const obscuroSepolia = function(cfg: HttpNetworkUserConfig) : HttpNetworkUserConfig {
+  cfg.url = "https://testnet.obscu.ro/v1/";
+  return cfg;
+}
+
+
+export const obscuro = function(cfg: HttpNetworkUserConfig) : HttpNetworkUserConfig {
+  cfg.url = "https://testnet.obscu.ro/v1/";
+  return cfg;
+}
+
+
+export const obscuroUAT = function(cfg: HttpNetworkUserConfig) : HttpNetworkUserConfig {
+  cfg.url = "https://uat-testnet.obscu.ro/v1/";
+  return cfg;
+}
