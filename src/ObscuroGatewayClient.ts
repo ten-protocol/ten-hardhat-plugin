@@ -93,4 +93,8 @@ export class ObscuroGatewayClient {
     url.searchParams.append("u", this.userId);
     return url;
   }
+
+  public proxyURL() {
+    return this.url + this.userId;
+  }
 }

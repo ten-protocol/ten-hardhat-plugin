@@ -1,6 +1,6 @@
-import { extendEnvironment } from "hardhat/config";
+import { extendConfig, extendEnvironment, extendProvider } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { HttpNetworkConfig, HttpNetworkUserConfig, NetworkConfig } from "hardhat/types";
+import { EIP1193Provider, HttpNetworkConfig, HttpNetworkUserConfig, NetworkConfig } from "hardhat/types";
 import { task } from "hardhat/config";
 import "@nomicfoundation/hardhat-ethers";
 
@@ -11,7 +11,7 @@ import "./type-extensions";
 import "./tasks";
 
 extendEnvironment((hre) => {
-  const httpConfig = (hre.network.config as HttpNetworkConfig);
+  var httpConfig = (hre.network.config as HttpNetworkConfig);
   if (httpConfig.url == null) {
     return;
   }
@@ -23,7 +23,7 @@ extendEnvironment((hre) => {
   if (!httpConfig.url.includes("obscu.ro")) {
     return;
   }
-
+  
   console.log("Obscuro URL detected! Initializing plugin.");
 
   // We add a field to the Hardhat Runtime Environment here.
@@ -32,8 +32,9 @@ extendEnvironment((hre) => {
   hre.gateway = lazyObject(() => new ObscuroGatewayClient(httpConfig.url, httpConfig.gatewayID));
 
   const initializeGateway = new Promise(async (resolve)=>{
-    const args = { /*verbose: true*/ };
-    await hre.run("obscuro:gateway:join", args);
+    const args = { };
+    const url = await hre.run("obscuro:gateway:join", args);
+    httpConfig.url = url;
     await hre.run("obscuro:gateway:authenticate", args);
     resolve(true);
   });
@@ -54,11 +55,24 @@ extendEnvironment((hre) => {
     task(key)
     .setDescription(hre.tasks[key]?.description || "")
     .setAction(async (args, env, runSuper)=>{
+      //console.log(key);
       await initializeGateway;
       return await runSuper(args);
     });
   });
 });
+
+
+extendProvider(async(provider: EIP1193Provider, config, network)=>{
+  const cfg = (config.networks[network] as HttpNetworkConfig);
+  if (!cfg?.url?.includes("obscu.ro")) {
+    return provider;
+  }
+
+  console.log(`Provider override. Cfg = ${cfg.url}`);
+  return provider;
+});
+
 
 
 export const obscuroSepolia = function(cfg: HttpNetworkUserConfig) : HttpNetworkUserConfig {

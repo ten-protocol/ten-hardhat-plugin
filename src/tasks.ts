@@ -1,5 +1,6 @@
 import { task } from "hardhat/config";
 
+
 task("nothing").setAction(async ()=>{});
 
 task("obscuro:gateway:join")
@@ -14,10 +15,16 @@ task("obscuro:gateway:join")
   if (args?.verbose != null) {
     console.log(`Joined gateway! UserID is ${userId}. Starting account authentication...`);
   }
+
+  return hre.gateway.proxyURL();
 });
 
 task("obscuro:gateway:authenticate")
 .setAction(async(args:any, hre)=> {
+  if (hre.gateway == null) {
+    return;
+  }
+
   const signers = await hre.ethers.getSigners();
 
   const promises = signers.map(async (signer) => {
@@ -44,6 +51,10 @@ task("obscuro:gateway:authenticate")
 
 task("obscuro:gateway:status")
 .setAction(async(args: any, hre)=> {
+  if (hre.gateway == null) {
+    return;
+  }
+
   const signers = await hre.ethers.getSigners();
   const promises = signers.map(async(signer)=>{
     const res = await hre.gateway.query(signer.address);
