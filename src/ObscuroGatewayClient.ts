@@ -38,9 +38,8 @@ export class ObscuroGatewayClient {
   public async register(address: string, sign:(arg:string)=>Promise<string>) {
     await this.ensureJoined();
 
-    const message = `Register ${this.userId} for ${address}`;
+    const message = `Register ${this.userId} for ${address.toLowerCase()}`;
     const body = JSON.stringify({
-      address: address,
       message: message,
       signature: await sign(message) 
     });

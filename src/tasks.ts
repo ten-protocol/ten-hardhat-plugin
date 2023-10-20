@@ -37,10 +37,12 @@ task("obscuro:gateway:authenticate")
       console.log(`Registering account ${signer.address}...`);
     }
     const sign = async (arg: string)=>{ 
+      return await signer.signMessage(arg);
+      /*
       return await hre.network.provider.send(
         "eth_sign",
         [signer.address, hre.ethers.hexlify(hre.ethers.toUtf8Bytes(arg))]
-      );    
+      );    */
     };
 
     await hre.gateway.register(signer.address, sign);
