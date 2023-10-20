@@ -1,7 +1,10 @@
 import { extendConfig, extendEnvironment, extendProvider } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { EIP1193Provider, HttpNetworkConfig, HttpNetworkUserConfig, NetworkConfig } from "hardhat/types";
+import { EIP1193Provider, EthereumProvider, HardhatConfig, HardhatUserConfig, HttpNetworkConfig, HttpNetworkUserConfig, NetworkConfig } from "hardhat/types";
 import { task } from "hardhat/config";
+import { createProvider } from "hardhat/internal/core/providers/construction";
+
+
 import "@nomicfoundation/hardhat-ethers";
 
 import { ObscuroGatewayClient } from "./ObscuroGatewayClient";
@@ -9,6 +12,7 @@ import { ObscuroGatewayClient } from "./ObscuroGatewayClient";
 // extensions in your npm package's types file.
 import "./type-extensions";
 import "./tasks";
+import { ObscuroProvider } from "./ObscuroProvider";
 
 extendEnvironment((hre) => {
   var httpConfig = (hre.network.config as HttpNetworkConfig);
@@ -23,7 +27,7 @@ extendEnvironment((hre) => {
   if (!httpConfig.url.includes("obscu.ro")) {
     return;
   }
-  
+
   console.log("Obscuro URL detected! Initializing plugin.");
 
   // We add a field to the Hardhat Runtime Environment here.
@@ -31,12 +35,16 @@ extendEnvironment((hre) => {
   // needed.
   hre.gateway = lazyObject(() => new ObscuroGatewayClient(httpConfig.url, httpConfig.gatewayID));
 
-  const initializeGateway = new Promise(async (resolve)=>{
-    const args = { };
-    const url = await hre.run("obscuro:gateway:join", args);
+  const initializeGateway = new Promise<EthereumProvider>(async (resolve)=>{
+    const url = await hre.run("obscuro:gateway:join");
     httpConfig.url = url;
-    await hre.run("obscuro:gateway:authenticate", args);
-    resolve(true);
+    httpConfig.gatewayID = hre.gateway.userId;
+    await hre.run("obscuro:gateway:authenticate", { verbose: true });
+    resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
+  });
+
+  extendProvider(async(provider: EIP1193Provider, config, network)=>{
+    return new ObscuroProvider(provider, initializeGateway);
   });
 
   Object.keys(hre.tasks).forEach((key: string)=>{
@@ -61,18 +69,6 @@ extendEnvironment((hre) => {
     });
   });
 });
-
-
-extendProvider(async(provider: EIP1193Provider, config, network)=>{
-  const cfg = (config.networks[network] as HttpNetworkConfig);
-  if (!cfg?.url?.includes("obscu.ro")) {
-    return provider;
-  }
-
-  console.log(`Provider override. Cfg = ${cfg.url}`);
-  return provider;
-});
-
 
 
 export const obscuroSepolia = function(cfg: HttpNetworkUserConfig) : HttpNetworkUserConfig {

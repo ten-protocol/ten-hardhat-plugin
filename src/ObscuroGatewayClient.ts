@@ -4,12 +4,14 @@ export class ObscuroGatewayClient {
   url: string;
   userId: string;
 
-  onJoin: ()=>void;
-  
-  constructor(url: string, userId?: string) {
-    this.url = url;
+  constructor(url?: string, userId?: string) {
+    this.url = url || "";
     this.userId = userId || "";
-    this.onJoin = ()=>{};
+  }
+
+  public initialize(url?: string, userId?: string) {
+    this.url = url || "";
+    this.userId = userId || "";
   }
 
   public async join() {
@@ -26,9 +28,11 @@ export class ObscuroGatewayClient {
     }
 
     this.userId = await (await response.blob()).text();
-
-    this.onJoin();
     return this.userId;
+  }
+
+  public setURL(url:string) {
+    this.url = url;
   }
 
   public async register(address: string, sign:(arg:string)=>Promise<string>) {
@@ -38,7 +42,7 @@ export class ObscuroGatewayClient {
     const body = JSON.stringify({
       address: address,
       message: message,
-      signature: await sign(message)
+      signature: await sign(message) 
     });
 
     const response = await fetch(this.authenticateURL(), {
