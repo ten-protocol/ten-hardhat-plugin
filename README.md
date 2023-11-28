@@ -1,13 +1,13 @@
-# Obscuro Connection Plugin
+# Ten Connection Plugin
 
-This is the Obscuro Connection Plugin for Hardhat written in hardhat.
+This is the Ten protocol connection plugin for Hardhat written in hardhat.
 
 ## Setup
 
 To use the plugin you can run the following command:
 
 ```bash
-npm install hh-obscuro-plugin
+npm install ten-hardhat-plugin
 ```
 
 Note that the plugin has minimum requirements for the hardhat peer dependency version as older versions do not have the ability to override the web3 provider.
@@ -15,7 +15,7 @@ Note that the plugin has minimum requirements for the hardhat peer dependency ve
 Once the dependency is installed you can just import it with:
 
 ```
-import 'hh-obscuro-plugin'
+import 'ten-hardhat-plugin'
 ```
 
 This will add new options to the network config and run the plugin on startup whenever the target network is obscuro one. Note that the plugin scans the URL automatically. If you want to stop this behaviour you should set:

@@ -1,9 +1,9 @@
 {
-  "name": "hh-obscuro-plugin",
+  "name": "ten-hardhat-plugin",
   "version": "0.0.1",
   "description": "Obscuro Labs",
-  "repository": "github:obscurolabs/hh-obscuro-plugin",
-  "author": "Obscuro Labs",
+  "repository": "github:ten-protocol/ten-hardhat-plugin",
+  "author": "Ten Protocol",
   "license": "MIT",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-export class ObscuroGatewayClient {
+export class TenGatewayClient {
   url: string;
   userId: string;
 

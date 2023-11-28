@@ -3,7 +3,7 @@ import { task } from "hardhat/config";
 
 task("nothing").setAction(async ()=>{});
 
-task("obscuro:gateway:join")
+task("ten:gateway:join")
 .setAction(async (args: any, hre) => {
   if (hre.gateway == null) {
     console.log("Gateway is not configured properly. Perhaps the network has a bad url?");
@@ -19,7 +19,7 @@ task("obscuro:gateway:join")
   return hre.gateway.proxyURL();
 });
 
-task("obscuro:gateway:authenticate")
+task("ten:gateway:authenticate")
 .setAction(async(args:any, hre)=> {
   if (hre.gateway == null) {
     return;
@@ -46,7 +46,7 @@ task("obscuro:gateway:authenticate")
   await Promise.all(promises);
 });
 
-task("obscuro:gateway:status")
+task("ten:gateway:status")
 .setAction(async(args: any, hre)=> {
   if (hre.gateway == null) {
     return;

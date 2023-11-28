@@ -2,7 +2,7 @@ import { ProviderWrapper } from 'hardhat/plugins'
 import { EIP1193Provider, EthereumProvider, RequestArguments } from 'hardhat/types';
 
 
-export class ObscuroProvider extends ProviderWrapper {
+export class TenProvider extends ProviderWrapper {
 
   shadow: Promise<EIP1193Provider>
 
