@@ -1,6 +1,6 @@
 # Ten Connection Plugin
 
-This is the Ten protocol connection plugin for Hardhat written in hardhat.
+This is the Ten protocol connection plugin for Hardhat written in typescript.
 
 ## Setup
 
