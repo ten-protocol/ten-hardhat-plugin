@@ -37,7 +37,10 @@ task("ten:gateway:authenticate")
       console.log(`Registering account ${signer.address}...`);
     }
     const sign = async (arg: string)=>{ 
-      return await signer.signMessage(arg);
+      let domain = {name: "Ten", version: "1.0", chainId: 443,}
+      let types = {Authentication: [{name: "Encryption Token", type: "address"},],};
+      let message = {"Encryption Token": "0x" + arg};
+      return await signer.signTypedData(domain, types, message)
     };
 
     await hre.gateway.register(signer.address, sign);

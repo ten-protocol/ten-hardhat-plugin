@@ -20,14 +20,15 @@ extendEnvironment((hre) => {
     return;
   }
 
-  if (httpConfig.useGateway != null && httpConfig.useGateway !== true) {
-    return;
-  }
+  if (!(httpConfig.useGateway != null && httpConfig.useGateway === true && httpConfig.url.includes('127.0.0.1'))) {
+    if (httpConfig.useGateway != null && httpConfig.useGateway !== true) {
+      return;
+    }
 
-  if (!httpConfig.url.includes("obscu.ro")) {
-    return;
+    if (!httpConfig.url.includes("obscu.ro") && !httpConfig.url.includes("ten.xyz")) {
+      return;
+    }
   }
-
   console.log("Obscuro URL detected! Initializing plugin.");
 
   // We add a field to the Hardhat Runtime Environment here.
@@ -38,8 +39,8 @@ extendEnvironment((hre) => {
   const initializeGateway = new Promise<EthereumProvider>(async (resolve)=>{
     const url = await hre.run("ten:gateway:join");
     httpConfig.url = url;
-    httpConfig.gatewayID = hre.gateway.userId;
-    await hre.run("ten:gateway:authenticate", { verbose: true });
+    httpConfig.gatewayID = hre.gateway.token;
+    await hre.run("ten:gateway:authenticate");
     resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
   });
 

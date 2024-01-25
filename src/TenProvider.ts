@@ -12,7 +12,6 @@ export class TenProvider extends ProviderWrapper {
   }
 
   public async request(args: RequestArguments) {
-    console.log(JSON.stringify(args));
     return (await this.shadow).request(args);
   }
 }
