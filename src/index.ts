@@ -24,7 +24,7 @@ extendEnvironment((hre) => {
     return;
   }
 
-  if (!httpConfig.url.includes("obscu.ro")) {
+  if (!httpConfig.url.includes("obscu.ro") && !httpConfig.url.includes("ten.xyz")) {
     return;
   }
 
