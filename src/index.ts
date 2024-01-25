@@ -36,10 +36,10 @@ extendEnvironment((hre) => {
   hre.gateway = lazyObject(() => new TenGatewayClient(httpConfig.url, httpConfig.gatewayID));
 
   const initializeGateway = new Promise<EthereumProvider>(async (resolve)=>{
-    const url = await hre.run("obscuro:gateway:join");
+    const url = await hre.run("ten:gateway:join");
     httpConfig.url = url;
     httpConfig.gatewayID = hre.gateway.userId;
-    await hre.run("obscuro:gateway:authenticate", { verbose: true });
+    await hre.run("ten:gateway:authenticate", { verbose: true });
     resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
   });
 
@@ -49,8 +49,8 @@ extendEnvironment((hre) => {
 
   Object.keys(hre.tasks).forEach((key: string)=>{
     const skipTasks = [
-      "obscuro:gateway:join", 
-      "obscuro:gateway:authenticate",
+      "ten:gateway:join", 
+      "ten:gateway:authenticate",
       "help",
       "compile",
       "clean"
