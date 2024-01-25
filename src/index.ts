@@ -20,14 +20,15 @@ extendEnvironment((hre) => {
     return;
   }
 
-  if (httpConfig.useGateway != null && httpConfig.useGateway !== true) {
-    return;
-  }
+  if (!(httpConfig.useGateway != null && httpConfig.useGateway === true && httpConfig.url.includes('127.0.0.1'))) {
+    if (httpConfig.useGateway != null && httpConfig.useGateway !== true) {
+      return;
+    }
 
-  if (!httpConfig.url.includes("obscu.ro") && !httpConfig.url.includes("ten.xyz")) {
-    return;
+    if (!httpConfig.url.includes("obscu.ro") && !httpConfig.url.includes("ten.xyz")) {
+      return;
+    }
   }
-
   console.log("Obscuro URL detected! Initializing plugin.");
 
   // We add a field to the Hardhat Runtime Environment here.
