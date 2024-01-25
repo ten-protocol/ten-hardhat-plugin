@@ -2,21 +2,21 @@ import fetch from 'node-fetch';
 
 export class TenGatewayClient {
   url: string;
-  userId: string;
+  token: string;
 
   constructor(url?: string, userId?: string) {
     this.url = url || "";
-    this.userId = userId || "";
+    this.token = userId || "";
   }
 
   public initialize(url?: string, userId?: string) {
     this.url = url || "";
-    this.userId = userId || "";
+    this.token = userId || "";
   }
 
   public async join() {
-    if (this.userId != "") {
-      return this.userId;
+    if (this.token != "") {
+      return this.token;
     }
 
     const response = await fetch(`${this.url}/join`, {
@@ -27,8 +27,8 @@ export class TenGatewayClient {
       throw new Error(`Error! status: ${response.status}`);
     }
 
-    this.userId = await (await response.blob()).text();
-    return this.userId;
+    this.token = await (await response.blob()).text();
+    return this.token;
   }
 
   public setURL(url:string) {
@@ -38,7 +38,7 @@ export class TenGatewayClient {
   public async register(address: string, sign:(arg:string)=>Promise<string>) {
     await this.ensureJoined();
 
-    const token = `${this.userId}`;
+    const token = `${this.token}`;
     const body = JSON.stringify({
       address: address,
       signature: await sign(token) 
@@ -75,7 +75,7 @@ export class TenGatewayClient {
   }
 
   public hasJoined() {
-    return this.userId != "";
+    return this.token != "";
   }
 
   private async ensureJoined() {
@@ -86,18 +86,18 @@ export class TenGatewayClient {
 
   private queryURL(address: string) {
     var url = new URL(`${this.url}query/address`);
-    url.searchParams.append("u", this.userId);
+    url.searchParams.append("token", this.token);
     url.searchParams.append("a", address);
     return url;
   }
 
   private authenticateURL() {
     var url = new URL(`${this.url}authenticate/`);
-    url.searchParams.append("u", this.userId);
+    url.searchParams.append("token", this.token);
     return url;
   }
 
   public proxyURL() {
-    return this.url + this.userId;
+    return this.url + this.token;
   }
 }

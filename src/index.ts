@@ -38,7 +38,7 @@ extendEnvironment((hre) => {
   const initializeGateway = new Promise<EthereumProvider>(async (resolve)=>{
     const url = await hre.run("ten:gateway:join");
     httpConfig.url = url;
-    httpConfig.gatewayID = hre.gateway.userId;
+    httpConfig.gatewayID = hre.gateway.token;
     await hre.run("ten:gateway:authenticate", { verbose: true });
     resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
   });
