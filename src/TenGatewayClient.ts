@@ -38,10 +38,10 @@ export class TenGatewayClient {
   public async register(address: string, sign:(arg:string)=>Promise<string>) {
     await this.ensureJoined();
 
-    const message = `Register ${this.userId} for ${address.toLowerCase()}`;
+    const token = `${this.userId}`;
     const body = JSON.stringify({
-      message: message,
-      signature: await sign(message) 
+      address: address,
+      signature: await sign(token) 
     });
 
     const response = await fetch(this.authenticateURL(), {
