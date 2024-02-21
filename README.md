@@ -22,7 +22,7 @@ This will add new options to the network config and run the plugin on startup wh
 
 ```json
 network {
-  useGateway:false
+  "useGateway":false
 }
 ```
 

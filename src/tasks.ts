@@ -22,28 +22,38 @@ task("ten:gateway:join")
 task("ten:gateway:authenticate")
 .setAction(async(args:any, hre)=> {
   if (hre.gateway == null) {
+    console.log(`Gateway not initialized; Unable to authenticate signers.`)
     return;
   }
 
   const signers = await hre.ethers.getSigners();
+  if (args?.verbose != null) {
+    console.log(`Found ${signers.length} signers configured for this network.`);
+  }
 
   const promises = signers.map(async (signer) => {
-    const isRegistered: boolean = await hre.gateway.query(signer.address);
-    if (isRegistered == true) {
-      return Promise.resolve();
-    }
+      try {
+        const isRegistered: boolean = await hre.gateway.query(signer.address);
+        if (isRegistered == true) {
+          console.log(`Account ${signer.address} is already registered with the gateway.`);
+          return Promise.resolve();
+        }
 
-    if (args?.verbose != null) {
-      console.log(`Registering account ${signer.address}...`);
-    }
-    const sign = async (arg: string)=>{ 
-      let domain = {name: "Ten", version: "1.0", chainId: 443,}
-      let types = {Authentication: [{name: "Encryption Token", type: "address"},],};
-      let message = {"Encryption Token": "0x" + arg};
-      return await signer.signTypedData(domain, types, message)
-    };
+        if (args?.verbose != null) {
+          console.log(`Registering account ${signer.address}...`);
+        }
+        const sign = async (arg: string)=>{ 
+          let domain = {name: "Ten", version: "1.0", chainId: 443,}
+          let types = {Authentication: [{name: "Encryption Token", type: "address"},],};
+          let message = {"Encryption Token": "0x" + arg};
+          return await signer.signTypedData(domain, types, message)
+        };
 
-    await hre.gateway.register(signer.address, sign);
+        await hre.gateway.register(signer.address, sign);
+      } catch(err) {
+        console.error(`Encountered error while attempting to register with gateway: ${err}`)
+        throw err
+      }
   });
 
   await Promise.all(promises);

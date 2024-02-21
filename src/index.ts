@@ -15,6 +15,7 @@ import "./tasks";
 import { TenProvider } from "./TenProvider";
 
 extendEnvironment((hre) => {
+  console.log(`TEN plugin is initializing...`);
   var httpConfig = (hre.network.config as HttpNetworkConfig);
   if (httpConfig.url == null) {
     return;
@@ -29,7 +30,7 @@ extendEnvironment((hre) => {
       return;
     }
   }
-  console.log("Obscuro URL detected! Initializing plugin.");
+  console.log(`Ten URL detected! ${httpConfig.url}. Initializing plugin.`);
 
   // We add a field to the Hardhat Runtime Environment here.
   // We use lazyObject to avoid initializing things until they are actually
@@ -37,10 +38,10 @@ extendEnvironment((hre) => {
   hre.gateway = lazyObject(() => new TenGatewayClient(httpConfig.url, httpConfig.gatewayID));
 
   const initializeGateway = new Promise<EthereumProvider>(async (resolve)=>{
-    const url = await hre.run("ten:gateway:join");
+    const url = await hre.run("ten:gateway:join", { verbose: true });
     httpConfig.url = url;
     httpConfig.gatewayID = hre.gateway.token;
-    await hre.run("ten:gateway:authenticate");
+    await hre.run("ten:gateway:authenticate", { verbose: true });
     resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
   });
 
@@ -64,7 +65,7 @@ extendEnvironment((hre) => {
     task(key)
     .setDescription(hre.tasks[key]?.description || "")
     .setAction(async (args, env, runSuper)=>{
-      //console.log(key);
+      console.log(key);
       await initializeGateway;
       return await runSuper(args);
     });
