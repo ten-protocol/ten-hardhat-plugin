@@ -12,6 +12,10 @@ export class TenProvider extends ProviderWrapper {
   }
 
   public async request(args: RequestArguments) {
+    if (args.method == 'eth_chainId') {
+      return this._wrappedProvider.request(args);
+    }
+
     return (await this.shadow).request(args);
   }
 }

@@ -98,6 +98,8 @@ export class TenGatewayClient {
   }
 
   public proxyURL() {
-    return this.url + this.token;
+    var url = new URL(`${this.url}`);
+    url.searchParams.append("token", this.token);
+    return url.toString()
   }
 }
