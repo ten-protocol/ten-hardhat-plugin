@@ -14,7 +14,7 @@ import "./type-extensions";
 import "./tasks";
 import { TenProvider } from "./TenProvider";
 
-extendEnvironment((hre) => {
+extendEnvironment(async (hre) => {
   console.log(`TEN plugin is initializing...`);
   var httpConfig = (hre.network.config as HttpNetworkConfig);
   if (httpConfig.url == null) {
@@ -41,11 +41,13 @@ extendEnvironment((hre) => {
     const url = await hre.run("ten:gateway:join", { verbose: true });
     httpConfig.url = url;
     httpConfig.gatewayID = hre.gateway.token;
-    await hre.run("ten:gateway:authenticate", { verbose: true });
+    console.log(`Queueing task ten:gateway:authenticate`)
+    const result = await hre.run("ten:gateway:authenticate", { verbose: true });
     resolve(await createProvider(hre.config, hre.network.name, hre.artifacts));
   });
 
-  extendProvider(async(provider: EIP1193Provider, config, network)=>{
+  extendProvider((provider: EIP1193Provider, config, network)=>{
+    console.log(`Extending provider with TenProvider`);
     return new TenProvider(provider, initializeGateway);
   });
 
@@ -70,6 +72,9 @@ extendEnvironment((hre) => {
       return await runSuper(args);
     });
   });
+
+  console.log(`Waiting to initialize gateway...`);
+  await initializeGateway;
 });
 
 
