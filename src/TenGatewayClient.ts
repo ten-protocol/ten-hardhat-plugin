@@ -58,6 +58,8 @@ export class TenGatewayClient {
       console.log(errStr);
       throw new Error(errStr);
     }
+
+    console.log(`Registered ${address} with gateway for token ${this.token}`);
   }
 
   public async query(address: string) {
