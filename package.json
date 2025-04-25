@@ -1,6 +1,6 @@
 {
-  "name": "ten-hardhat-plugin",
-  "version": "0.0.12",
+  "name": "@tenprotocol/ten-hardhat-plugin",
+  "version": "0.0.14",
   "description": "Obscuro Labs",
   "repository": "github:ten-protocol/ten-hardhat-plugin",
   "author": "Ten Protocol",
