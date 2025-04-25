@@ -1,6 +1,6 @@
 {
-  "name": "ten-hardhat-plugin",
-  "version": "0.0.12",
+  "name": "@tenprotocol/ten-hardhat-plugin",
+  "version": "0.0.14",
   "description": "Obscuro Labs",
   "repository": "github:ten-protocol/ten-hardhat-plugin",
   "author": "Ten Protocol",
@@ -27,14 +27,14 @@
     "LICENSE",
     "README.md"
   ],
-  "dependencies" : {
-    "node-fetch": "^2.6.7",
-    "@nomicfoundation/hardhat-ethers": "^3.0.4"
+  "dependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/fs-extra": "^5.1.0",
-    "@types/mocha": "^5.2.6",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^8.10.38",
     "@types/node-fetch": "^2.6.7",
     "chai": "^4.2.0",
