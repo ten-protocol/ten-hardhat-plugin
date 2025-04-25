@@ -10,14 +10,14 @@ prior to running. For more information on joining and authenticating against Ten
 To use the plugin you can run the following command:
 
 ```bash
-npm install ten-hardhat-plugin
+npm install @tenprotocol/ten-hardhat-plugin
 ```
 
 Note that the plugin has minimum requirements for the hardhat peer dependency version as older versions do not have the 
 ability to override the web3 provider. Once the dependency is installed you can just import it with:
 
 ```
-import 'ten-hardhat-plugin'
+import '@tenprotocol/ten-hardhat-plugin'
 ```
 
 This will add new options to the network config and run the plugin on startup to join and authenticate whenever the 
@@ -28,7 +28,7 @@ given below;
 
 ```
 require("@nomicfoundation/hardhat-toolbox");
-require("ten-hardhat-plugin")
+require("@tenprotocol/ten-hardhat-plugin")
 
 const { PK } = process.env;
 
