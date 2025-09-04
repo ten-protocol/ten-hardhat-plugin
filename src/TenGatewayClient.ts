@@ -99,6 +99,29 @@ export class TenGatewayClient {
     return url;
   }
 
+  public async getChainId(): Promise<number> {
+    const response = await fetch(`${this.url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "eth_chainId",
+        params: [],
+        id: 1
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching chain ID! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    // Convert hex result to decimal
+    return parseInt(result.result, 16);
+  }
+
   public proxyURL() {
     var url = new URL(`${this.url}`);
     url.searchParams.append("token", this.token);
